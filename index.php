@@ -1,6 +1,6 @@
 <?php
-// Se ho l'amount in POST vuol dire che ho richiesto generazione del Pay-By-Link, quindi procedo
-if ($_POST["amount"]) {
+// Se ho l'importo in POST vuol dire che ho richiesto generazione del Pay-By-Link, quindi procedo
+if ($_POST["importo"]) {
         
     // Richiesta link PayMail
 
@@ -15,7 +15,7 @@ if ($_POST["amount"]) {
         $apiKey = "ALIAS_WEB_00073202"; // Alias fornito da Nexi
         $chiaveSegreta = "JW7O76VCXA01QF1GUIUBNNSTI2IZSK2S"; // Chiave segreta fornita da Nexi
         $codiceTransazione = "APIBO_" . date('YmdHis'); // Codice della transazione
-        $importo = $_POST["amount"]; // 5000 = 50,00 EURO (indicare la cifra in centesimi)
+        $importo = $_POST["importo"]*100; // 5000 = 50,00 EURO (indicare la cifra in centesimi)
         $timeout = 4; // Durata in ore del link di pagamento che verrà generato 
         $url = "https://" . filter_input(INPUT_SERVER, 'HTTP_HOST') . "/esito.php"; // URL dove viene rimandato il cliente al termine del pagamento (prefisso necessario http:// oppure https://)
         $urlBack = "https://" . filter_input(INPUT_SERVER, 'HTTP_HOST') . "/back.php"; // URL dove viene rimandato il cliente in caso di annullamento del pagamento (prefisso necessario http:// oppure https://)
@@ -36,21 +36,20 @@ if ($_POST["amount"]) {
         );
 
         // Controllo se ho i parametri aggiuntivi opzionali e nel caso li aggiungo
-        $parametriAggiuntivi;
         if (!empty($_POST['mail'])) {
-            array_push($parametriAggiuntivi, array('mail' => $_POST['mail']));
+           $parametriAggiuntivi['mail'] = $_POST['mail'];
         }
         if (!empty($_POST['nome'])) {
-            array_push($parametriAggiuntivi, array('nome' => $_POST['nome']));
+            $parametriAggiuntivi['nome'] = $_POST['nome'];
         }
         if (!empty($_POST['cognome'])) {
-            array_push($parametriAggiuntivi, array('cognome' => $_POST['cognome']));
+            $parametriAggiuntivi['cognome'] = $_POST['cognome'];
         }
         if (!empty($_POST['descrizione'])) {
-            array_push($parametriAggiuntivi, array('descrizione' => $_POST['descrizione']));
+            $parametriAggiuntivi['descrizione'] = $_POST['descrizione'];
         }
         if (!empty($parametriAggiuntivi)) {
-            array_push($parametri, array('parametriAggiuntivi' => $parametriAggiuntivi))
+            $parametri['parametriAggiuntivi'] = $parametriAggiuntivi;
         }
 
         curl_setopt_array($connection, array(
@@ -220,8 +219,8 @@ if ($_POST["amount"]) {
                 </form>
 
                 <?php
-                // Se ho l'amount in POST vuol dire che ho richiesto generazione del Pay-By-Link quindi ritorno l'esito
-                if ($_POST["amount"]) {
+                // Se ho l'importo in POST vuol dire che ho richiesto generazione del Pay-By-Link quindi ritorno l'esito
+                if ($_POST["importo"]) {
                     // Controllo MAC di risposta
                     if ($risposta['mac'] == $MACrisposta) {
 
@@ -229,7 +228,7 @@ if ($_POST["amount"]) {
                         if ($risposta['esito'] == 'OK') {
                             echo 'Operazione n. ' . $risposta['idOperazione'] . ' eseguita<br>';
                             echo "Link generato correttamente: " . $risposta['payMailUrl'] . "<br>";
-                            echo "<a href ='" . $risposta['payMailUrl'] . "'>VAI AL LINK</a>";
+                            echo "<a target='_blank' href='" . $risposta['payMailUrl'] . "'>VAI AL LINK</a>";
                         } else {
                             echo 'Operazione n. ' . $risposta['idOperazione'] . ' non eseguita. esito ' . $risposta['esito'] . '<br><br>' . json_encode($risposta['errore']);
                         }
