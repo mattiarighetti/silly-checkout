@@ -1,0 +1,24 @@
+Ipotizziamo di realizzare un gestionale di backoffice, che permetta al personale amministrativo di 
+creare ordini e richiedere il pagamento ai clienti tramite mail o sms.
+
+Il backoffice permetterà di:
+
+* Avviare un pagamento pay-by-link
+* Verificare lo stato del pagamento interrogando il gateway XPay
+
+Il materiale presente in questo archivio sarà il punto di partenza per gli sviluppi.
+
+Il gateway XPay mette a disposizione un ambiente demo raggiungibile all'indirizzo: https://int-ecommerce.nexi.it.
+
+Le credenziali demo sono:
+ Alias: ALIAS_WEB_00073202
+ Chiave: JW7O76VCXA01QF1GUIUBNNSTI2IZSK2S
+
+La carta di pagamento per effettuare pagamenti demo:
+ PAN: 5255000000000001
+ Scadenza: 12/23
+ cvv: 123
+
+Una volta eseguite la transazione e verificato l'esito nella pagina di dettaglio ordine, inserisci 
+codice transazione e screenshot di quanto realizzato sulla pagina: https://iplus.srl/challenge-xpay/
+
